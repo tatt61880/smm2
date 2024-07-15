@@ -13,14 +13,14 @@
     const inputText = document.getElementById('input-text').value;
 
     let result = '';
-    const re = /(\w{3}-\w{3}-\w{3})/g;
+    const re = /\b([A-HJ-NP-Y0-9]{3})-?([A-HJ-NP-Y0-9]{3})-?([A-HJ-NP-Y0-9]{3})\b/gi;
 
     const levelCodeSet = new Set();
     const levelCodes = []; 
 
     let m;
     while (m = re.exec(inputText)) {
-      const levelCode = m[0];
+      const levelCode = `${m[1].toUpperCase()}-${m[2].toUpperCase()}-${m[3].toUpperCase()}`;
       if (!levelCodeSet.has(levelCode)) {
         levelCodeSet.add(levelCode);
         levelCodes.push(levelCode);
