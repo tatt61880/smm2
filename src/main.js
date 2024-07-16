@@ -1,6 +1,6 @@
 (function () {
   'use strict';
-  const version = 'Version: 2024.07.16';
+  const version = 'Version: 2024.07.17';
 
   window.onload = function () {
     document.getElementById('version-info').innerText = version;
@@ -13,7 +13,7 @@
     const inputText = document.getElementById('input-text').value;
 
     let result = '';
-    const re = /\b([A-HJ-NP-Y0-9]{3})-?([A-HJ-NP-Y0-9]{3})-?([A-HJ-NP-Y0-9]{3})\b/gi;
+    const re = /\b([B-DF-HJ-NP-TV-Y0-9]{3})-?([B-DF-HJ-NP-TV-Y0-9]{3})-?([B-DF-HJ-NP-TV-Y0-9]{3})\b/gi;
 
     const codeInInputStrMap = new Map();
     const levelCodeSet = new Set();
