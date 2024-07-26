@@ -103,10 +103,11 @@ my $unclearedNum = 1000;
     for my $userName (sort {
         my $res = $userNum{$b} <=> $userNum{$a};
         return $res if ($res != 0);
-        return $userMinNum{$a} <=> $userMinNum{$b};
+        return $userMinNum{$b} <=> $userMinNum{$a};
     } keys %userNum) {
         my $num = $userNum{$userName};
         $unclearedNum -= $num;
+        my $minNum = $userMinNum{$userName};
 
         print FOUT "$userName: $num\n";
     }
