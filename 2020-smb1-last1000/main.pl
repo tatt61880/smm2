@@ -16,9 +16,12 @@ my %userMinNum;
     while(<F>) {
         chomp;
 
+        next if (m/^$/);
+
         if (m/^(.*?) has cleared ".* \((...-...-...)\)! The clear rate is now \d+\/(\d+)+\. This is their (\d+)/) {
             $userName = $1;
             $levelId = $2;
+            next;
         }
 
         if (m/^There are (\d*),?(\d+) uncleared 2020 courses!/) {
@@ -42,6 +45,9 @@ my %userMinNum;
                 }
             }
         }
+
+        $userName = '';
+        $levelId = '';
     }
 
     close F;
