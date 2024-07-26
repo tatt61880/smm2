@@ -37,12 +37,6 @@ my %userMinNum;
             } else {
                 $levelsUser{$levelId} = $userName;
                 $levelsNum{$levelId} = $num;
-
-                unless (defined $userMinNum{$userName}) {
-                    $userMinNum{$userName} = $num;
-                } elsif ($num < $userMinNum{$userName}) {
-                    $userMinNum{$userName} = $num;
-                }
             }
         }
 
@@ -90,6 +84,13 @@ my @unclearedLevels;
             next;
         }
 
+        my $num = $levelsNum{$levelId};
+        unless (defined $userMinNum{$userName}) {
+            $userMinNum{$userName} = $num;
+        } elsif ($num < $userMinNum{$userName}) {
+            $userMinNum{$userName} = $num;
+        }
+
         $userNum{$userName}++;
     }
 
@@ -115,7 +116,9 @@ my $unclearedNum = 1000;
         $unclearedNum -= $num;
         my $minNum = $userMinNum{$userName};
 
-        print FOUT "$userName: $num\n";
+        print FOUT "$userName: $num";
+        # print FOUT "\t$minNum";
+        print FOUT "\n";
     }
 
     print FOUT "```\n";
