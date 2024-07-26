@@ -6,6 +6,7 @@ my $userName;
 my $levelId;
 my %levelsUser;
 my %levelsNum;
+my %userMinNum;
 
 {
     my $input = "input\\discord-log.txt";
@@ -22,8 +23,24 @@ my %levelsNum;
 
         if (m/^There are (\d*),?(\d+) uncleared 2020 courses!/) {
             my $num = $1 . $2;
-            $levelsUser{$levelId} = $userName;
-            $levelsNum{$levelId} = $num;
+
+            if (defined $levelsUser{$levelId}) {
+                if ($levelsUser{$levelId} ne $userName) {
+                    print STDERR "$levelId $levelsUser{$levelId} ne $userName\n";
+                }
+                if (defined $levelsNum{$levelId} && $levelsNum{$levelId} != $num) {
+                    print STDERR "$levelId $levelsNum{$levelId} != $num\n";
+                }
+            } else {
+                $levelsUser{$levelId} = $userName;
+                $levelsNum{$levelId} = $num;
+
+                unless (defined $userMinNum{$userName}) {
+                    $userMinNum{$userName} = $num;
+                } elsif ($num < $userMinNum{$userName}) {
+                    $userMinNum{$userName} = $num;
+                }
+            }
         }
     }
 
@@ -83,7 +100,11 @@ my $unclearedNum = 1000;
     print FOUT "Contributor ranking for last 1000 levels of 2020 SMB1.\n";
     print FOUT "```\n";
 
-    for my $userName (sort {$userNum{$b} <=> $userNum{$a}} keys %userNum) {
+    for my $userName (sort {
+        my $res = $userNum{$b} <=> $userNum{$a};
+        return $res if ($res != 0);
+        return $userMinNum{$a} <=> $userMinNum{$b};
+    } keys %userNum) {
         my $num = $userNum{$userName};
         $unclearedNum -= $num;
 
@@ -94,6 +115,10 @@ my $unclearedNum = 1000;
     print FOUT "Current uncleared levels: $unclearedNum\n";
 
     close FOUT;
+}
+
+sub sortFunc($$) {
+
 }
 
 
