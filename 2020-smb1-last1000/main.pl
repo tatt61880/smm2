@@ -124,11 +124,6 @@ my $unclearedNum = 1000;
     close FOUT;
 }
 
-sub sortFunc($$) {
-
-}
-
-
 {
     my $output = "output\\uncleared-levels.txt";
     open FOUT, ">$output" or die;
