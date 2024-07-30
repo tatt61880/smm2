@@ -9,15 +9,19 @@ let count = 0;
 let breakFlag = false;
 for (let id of ids) {
   id = id.replaceAll('-', '');
+  const url = `https://tgrcode.com/mm2/level_info/${id}`;
+  const outputFilename = `./json/${id}.json`;
+
+  ++count;
 
   if (breakFlag) break;
-  await setTimeout(10000);
-  console.log(`${++count} ${id}`);
+  if (fs.existsSync(outputFilename)) continue;
 
-  const url = `https://tgrcode.com/mm2/level_info/${id}`;
+  console.log(`${count} ${id}`);
 
   https.get(url, (res) => {
       if (res.statusCode !== 200) {
+        console.error(`Error: ${id}`);
         breakFlag = true;
         return;
       }
@@ -29,10 +33,12 @@ for (let id of ids) {
       });
       
       res.on('end', function () {
-        fs.writeFileSync(`./json/${id}.json`, body);
+        fs.writeFileSync(outputFilename, body);
       })
   })
   .on("error", (e) => {
       console.error(e);
-  });  
+  });
+
+  await setTimeout(10000);
 }
