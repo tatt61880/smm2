@@ -67,7 +67,7 @@ my %userNum;
 my @unclearedLevels;
 
 {
-    my $levels = "input\\last-1000-levels.txt";
+    my $levels = "input\\level-ids.txt";
     open FIN, "<$levels" or die;
     binmode FIN, ":utf8";
 
