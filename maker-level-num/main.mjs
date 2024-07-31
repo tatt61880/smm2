@@ -3,8 +3,8 @@ import fs from 'fs';
 const idsText = fs.readFileSync(`./input/maker-ids.txt`, 'utf-8');
 const ids = idsText.split(/\r?\n/).filter((line) => /^\w{9}$/.test(line));
 
-const userCodeToName = {};
-const clearsCount = {};
+const unclearedLevelsCount = {};
+const userNames = {};
 
 for (const id of ids) {
   const filename = `./json/${id}.json`;
@@ -19,15 +19,21 @@ for (const id of ids) {
       const uploadedTime = course.uploaded_pretty;
       const ret = uploadedTime.match(/\d{4}/);
       const year = ret[0];
+      userNames[id] = course.uploader.name;
 
       if (year === '2020' && course.clears === 0) {
         count++;
       }
     }
 
-    console.log(count);
-    // console.log(json);
+    unclearedLevelsCount[id] = count;
   } catch (err) {
     console.error(`Error: ${err}`);
   }
+}
+
+for (const id of Object.keys(unclearedLevelsCount)) {
+  const num = unclearedLevelsCount[id];
+  const name = userNames[id];
+  console.log(`${id}\t${num}\t${name}`);
 }
