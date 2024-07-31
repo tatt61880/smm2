@@ -32,7 +32,7 @@ for (const id of ids) {
   }
 }
 
-for (const id of Object.keys(unclearedLevelsCount)) {
+for (const id of Object.keys(unclearedLevelsCount).sort((a, b) => unclearedLevelsCount[b] - unclearedLevelsCount[a])) {
   const num = unclearedLevelsCount[id];
   const name = userNames[id];
   console.log(`${id}\t${num}\t${name}`);
