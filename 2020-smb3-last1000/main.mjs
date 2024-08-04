@@ -41,7 +41,7 @@ for (let id of ids) {
 
 // let count = ids.length;
 
-console.log('Contributor ranking for 2020 SMB3');
+// console.log('Contributor ranking for 2020 SMB3');
 for (const userCode of Object.keys(clearsCount).sort((a, b) => clearsCount[b] - clearsCount[a] )) {
   const userName = userCodeToName[userCode];
   const userCount = clearsCount[userCode];
