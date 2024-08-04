@@ -45,7 +45,7 @@ for (let id of ids) {
 for (const userCode of Object.keys(clearsCount).sort((a, b) => clearsCount[b] - clearsCount[a] )) {
   const userName = userCodeToName[userCode];
   const userCount = clearsCount[userCode];
-  console.log(`${userName}: ${userCount}`);
+  console.log(`${userName}: ${userCount}\r`);
   // count -= userCount;
 }
 // console.log(`Current uncleared levels: ${count}`);
