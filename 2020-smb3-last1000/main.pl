@@ -64,6 +64,7 @@ my %userMinNum;
 }
 
 my %userNum;
+my @clearedLevels;
 my @unclearedLevels;
 
 {
@@ -83,6 +84,7 @@ my @unclearedLevels;
             push @unclearedLevels, $levelId;
             next;
         }
+        push @clearedLevels, $levelId;
 
         my $num = $levelsNum{$levelId};
         unless (defined $userMinNum{$userName}) {
@@ -133,6 +135,18 @@ my $unclearedNum = 1000;
     binmode FOUT, ":utf8";
 
     for my $levelId (@unclearedLevels) {
+        print FOUT "$levelId\n";
+    }
+
+    close FOUT;
+}
+
+{
+    my $output = "output\\cleared-levels.txt";
+    open FOUT, ">$output" or die;
+    binmode FOUT, ":utf8";
+
+    for my $levelId (@clearedLevels) {
         print FOUT "$levelId\n";
     }
 
