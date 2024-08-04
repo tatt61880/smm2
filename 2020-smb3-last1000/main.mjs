@@ -1,6 +1,7 @@
 import fs from 'fs';
 
-const idsText = fs.readFileSync(`./input/level-ids.txt`, 'utf-8');
+// const idsText = fs.readFileSync(`./input/level-ids.txt`, 'utf-8');
+const idsText = fs.readFileSync(`./output/cleared-levels.txt`, 'utf-8');
 const ids = idsText.split(/\r?\n/).filter((line) => /^\w{3}-\w{3}-\w{3}$/.test(line));
 
 const userCodeToName = {};
@@ -38,13 +39,13 @@ for (let id of ids) {
   }
 }
 
-let count = ids.length;
+// let count = ids.length;
 
-console.log('ranking for 2020 SMB3');
+console.log('Contributor ranking for 2020 SMB3');
 for (const userCode of Object.keys(clearsCount).sort((a, b) => clearsCount[b] - clearsCount[a] )) {
   const userName = userCodeToName[userCode];
   const userCount = clearsCount[userCode];
-  console.log(`${userName}\t${userCount}`);
-  count -= userCount;
+  console.log(`${userName}: ${userCount}`);
+  // count -= userCount;
 }
-console.log(`Current uncleared levels: ${count}`);
+// console.log(`Current uncleared levels: ${count}`);
