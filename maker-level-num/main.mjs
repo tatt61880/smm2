@@ -19,7 +19,13 @@ for (const id of ids) {
       const uploadedTime = course.uploaded_pretty;
       const ret = uploadedTime.match(/\d{4}/);
       const year = ret[0];
-      userNames[id] = course.uploader.name;
+      if (userNames[id] !== undefined) {
+        if (userNames[id] !== course.uploader.name) {
+          console.warn(`Warning: ${id}\t${userNames[id]} !== ${course.uploader.name}`)
+        }
+      } else {
+        userNames[id] = course.uploader.name;
+      }
 
       if (year === '2020' && course.clears === 0) {
         count++;
