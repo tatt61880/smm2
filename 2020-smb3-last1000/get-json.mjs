@@ -17,6 +17,7 @@ for (let id of ids) {
 
   if (breakFlag) break;
   if (fs.existsSync(outputFilename)) continue;
+  if (id === 'Q20YYQXCG') continue;
 
   console.log(`${count} ${id}`);
 
