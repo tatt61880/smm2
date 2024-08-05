@@ -8,6 +8,7 @@ const ids = idsText.split(/\r?\n/).filter((line) => /^\w{3}-\w{3}-\w{3}$/.test(l
 
 let count = 0;
 let breakFlag = false;
+let waitFlag = false;
 for (let id of ids) {
   id = id.replaceAll('-', '');
   const url = `https://tgrcode.com/mm2/level_info/${id}`;
@@ -21,6 +22,10 @@ for (let id of ids) {
 
   console.log(`${count} ${id}`);
 
+  if (waitFlag) {
+    await setTimeout(10000);
+  }
+  waitFlag = true;
   https.get(url, (res) => {
       if (res.statusCode !== 200) {
         console.error(`Error: ${id}`);
@@ -41,6 +46,4 @@ for (let id of ids) {
   .on("error", (e) => {
       console.error(e);
   });
-
-  await setTimeout(10000);
 }
