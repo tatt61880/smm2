@@ -9,6 +9,8 @@ const clearsCount = {};
 
 for (let id of ids) {
   id = id.replaceAll('-', '');
+  if (id === 'Q20YYQXCG') continue;
+
   const filename = `./json/${id}.json`;
 
   try {
