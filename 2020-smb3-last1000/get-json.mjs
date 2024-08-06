@@ -24,8 +24,10 @@ for (let id of ids) {
 
   if (waitFlag) {
     await setTimeout(10000);
+  } else {
+    waitFlag = true;
   }
-  waitFlag = true;
+
   https.get(url, (res) => {
       if (res.statusCode !== 200) {
         console.error(`Error: ${id}`);

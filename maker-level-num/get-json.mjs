@@ -7,6 +7,7 @@ const ids = idsText.split(/\r?\n/).filter((line) => /^\w{9}$/.test(line));
 
 let count = 0;
 let breakFlag = false;
+let waitFlag = false;
 for (const id of ids) {
   const url = `https://tgrcode.com/mm2/get_posted/${id}`;
   const outputFilename = `./json/${id}.json`;
@@ -17,6 +18,12 @@ for (const id of ids) {
   if (fs.existsSync(outputFilename)) continue;
 
   console.log(`${count} ${id}`);
+
+  if (waitFlag) {
+    await setTimeout(10000);
+  } else {
+    waitFlag = true;
+  }
 
   https.get(url, (res) => {
       if (res.statusCode !== 200) {
@@ -38,6 +45,4 @@ for (const id of ids) {
   .on("error", (e) => {
       console.error(e);
   });
-
-  await setTimeout(10000);
 }
