@@ -118,7 +118,11 @@ my $unclearedNum = 1000;
         $unclearedNum -= $num;
         my $minNum = $userMinNum{$userName};
 
-        print FOUT "$userName: $num";
+        if ($userMinNum{$userName} == 0) {
+            print FOUT "($userName: $num)";
+        } else {
+            print FOUT "$userName: $num";
+        }
         # print FOUT "\t$minNum";
         print FOUT "\n";
     }
