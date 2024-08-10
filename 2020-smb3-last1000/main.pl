@@ -29,10 +29,10 @@ my %userMinNum;
 
             if (defined $levelsUser{$levelId}) {
                 if ($levelsUser{$levelId} ne $userName) {
-                    print STDERR "$levelId $levelsUser{$levelId} ne $userName\n";
+                    print STDERR "There are multi result for one level ($levelId) and their user name of the clears aren't same. $levelsUser{$levelId} ne $userName\n";
                 }
                 if (defined $levelsNum{$levelId} && $levelsNum{$levelId} != $num) {
-                    print STDERR "$levelId $levelsNum{$levelId} != $num\n";
+                    print STDERR "There are multi result for one level ($levelId): $levelsNum{$levelId} != $num\n";
                 }
             } else {
                 $levelsUser{$levelId} = $userName;
@@ -106,7 +106,7 @@ my $unclearedNum = 1000;
     open FOUT, ">$output" or die;
     binmode FOUT, ":utf8";
 
-    print FOUT "Contributor ranking for last 1000 levels of 2020 SMB3.\n";
+    print FOUT "Contributor ranking for last 1000 levels of 2020 SMB3. :Toadette:\n";
     print FOUT "```\n";
 
     for my $userName (sort {
@@ -128,7 +128,11 @@ my $unclearedNum = 1000;
     }
 
     print FOUT "```\n";
-    print FOUT "Current uncleared levels: $unclearedNum\n";
+    if ($unclearedNum == 0) {
+        print FOUT "Current uncleared levels: $unclearedNum :JuzHype:\n";
+    } else {
+        print FOUT "Current uncleared levels: $unclearedNum :PeepoCheer:\n";
+    }
 
     close FOUT;
 }
