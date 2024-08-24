@@ -11,12 +11,13 @@ for (let id of ids) {
   try {
     const jsonText = fs.readFileSync(filename, 'utf-8');
     const json = JSON.parse(jsonText);
-    const time = json.upload_time;  // 10000 = 10 seconds.
+
+    const upload_time = json.upload_time;  // 10000 = 10 seconds.
     const country = json.uploader.country;  // US, JP, MX, ...
     const likes = json.likes;
     const boos = json.boos;
 
-    if (likes > 50) {
+    if (upload_time <= 20000) {
       console.log(id);
       count++;
     }
