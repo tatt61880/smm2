@@ -81,8 +81,8 @@ for (let id of ids) {
       }
     }
 
-    if (versus_rating !== 0 && versus_rating < 100) {
-      console.log(`${id}\t${versus_rating}\t${levelName}`);
+    if (/トロール/.test(levelName)) {
+      console.log(`${id}\t${levelName}`);
       count++;
     }
   } catch (err) {
