@@ -8,6 +8,7 @@ const unixTimeForComparing = new Date('2020-03-21T00:00:00').getTime() / 1000 - 
 
 const makerInfo = true;
 const makerLevelNums = new Map();
+const makerCodeToName = new Map();
 
 const countryInfo = true;
 const countryLevelNums = new Map();
@@ -36,8 +37,12 @@ for (let id of ids) {
 
     const country = json.uploader.country;  // 'US', 'JP', 'MX', ...
     const uploader_code = json.uploader.code;
-
+    const uploader_name = json.uploader.name;
+    
+    
     if (makerInfo) {
+      makerCodeToName.set(uploader_code, uploader_name);
+
       if (makerLevelNums.has(uploader_code)) {
         makerLevelNums.set(uploader_code, makerLevelNums.get(uploader_code) + 1);
       } else {
@@ -70,6 +75,7 @@ if (makerInfo) {
   let count2 = 0;
   const nums = new Map();
   for (const uploader_code of [...makerLevelNums.keys()].sort((a, b) => makerLevelNums.get(b) - makerLevelNums.get(a))) {
+    const name = makerCodeToName.get(uploader_code);
     const num = makerLevelNums.get(uploader_code);
     if (nums.has(num)) {
       nums.set(num, nums.get(num) + 1);
@@ -77,7 +83,7 @@ if (makerInfo) {
       nums.set(num, 1);
     }
     if (num > 3) {
-      console.log(`${uploader_code} ${num}`);
+      console.log(`${uploader_code} ${num} ${name}`);
       count2++;
     }
   }
