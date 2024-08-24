@@ -6,6 +6,8 @@ const ids = idsText.split(/\r?\n/).filter((line) => /^\w{3}-\w{3}-\w{3}$/.test(l
 const unixTimeForComparing = new Date('2020-03-21T00:00:00').getTime() / 1000 - 9 * 3600;  // 比較用の Unix time (※ process.env.TZ = 'Asia/Tokyo' の環境で実行する前提で調整しています。)
 // console.log(unixTimeForComparing);
 
+const makerLevelNums = new Map();
+
 let count = 0;
 for (let id of ids) {
   const id_ = id.replaceAll('-', '');
@@ -31,7 +33,13 @@ for (let id of ids) {
     const country = json.uploader.country;  // 'US', 'JP', 'MX', ...
     const uploader_code = json.uploader.code;
 
-    if (country === '') {
+    if (makerLevelNums.has(uploader_code)) {
+      makerLevelNums.set(uploader_code, makerLevelNums.get(uploader_code) + 1);
+    } else {
+      makerLevelNums.set(uploader_code, 1);
+    }
+
+    if (upload_time < 20000) {
       console.log(`${id}`);
       count++;
     }
@@ -41,3 +49,15 @@ for (let id of ids) {
 }
 
 console.log(`count = ${count}`);
+
+console.log(`----------------------------------------`);
+let count2 = 0;
+for (const uploader_code of [...makerLevelNums.keys()].sort((a, b) => makerLevelNums.get(b) - makerLevelNums.get(a))) {
+  const num = makerLevelNums.get(uploader_code);
+  if (num > 3) {
+    console.log(`${uploader_code} ${num}`);
+    count2++;
+  }
+}
+
+console.log(`count2 = ${count2}`);
