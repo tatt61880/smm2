@@ -13,12 +13,18 @@ for (let id of ids) {
     const json = JSON.parse(jsonText);
 
     const upload_time = json.upload_time;  // 10000 = 10 seconds.
-    const country = json.uploader.country;  // US, JP, MX, ...
+    const country = json.uploader.country;  // 'US', 'JP', 'MX', ...
+    const game_style_name = json.game_style_name;  // 'SMB1', 'SMB3', 'SMW', 'NSMBU', 'SM3DW'
+
+    const clears = json.clears;
+    const attempts = json.attempts;
+    const plays = json.plays;  // footprints
+
     const likes = json.likes;
     const boos = json.boos;
 
-    if (upload_time <= 20000) {
-      console.log(id);
+    if (plays >= 1000) {
+      console.log(`${id}`);
       count++;
     }
   } catch (err) {
