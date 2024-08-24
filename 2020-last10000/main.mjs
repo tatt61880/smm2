@@ -8,11 +8,13 @@ const unixTimeForComparing = new Date('2020-03-21T00:00:00').getTime() / 1000 - 
 
 const makerInfo = true;
 const countryInfo = true;
+const styleInfo = true;
 const themeInfo = true;
 
 const makerLevelNums = new Map();
 const makerCodeToName = new Map();
 const countryLevelNums = new Map();
+const styleLevelNums = new Map();
 const themeLevelNums = new Map();
 
 let count = 0;
@@ -28,7 +30,7 @@ for (let id of ids) {
     const uploaded = json.uploaded;  // 投稿日時の Unix Time
 
     const upload_time = json.upload_time;  // 10000 = 10 seconds.
-    const game_style_name = json.game_style_name;  // 'SMB1', 'SMB3', 'SMW', 'NSMBU', 'SM3DW'
+    const style_name = json.game_style_name;  // 'SMB1', 'SMB3', 'SMW', 'NSMBU', 'SM3DW'
     const theme_name = json.theme_name;  // 'Castle', 'Ghost house', 'Airship', 'Overworld', 'Sky', 'Desert', 'Snow', 'Underground'
 
     const clears = json.clears;
@@ -60,6 +62,14 @@ for (let id of ids) {
         countryLevelNums.set(country, countryLevelNums.get(country) + 1);
       } else {
         countryLevelNums.set(country, 1);
+      }
+    }
+
+    if (styleInfo) {
+      if (styleLevelNums.has(style_name)) {
+        styleLevelNums.set(style_name, styleLevelNums.get(style_name) + 1);
+      } else {
+        styleLevelNums.set(style_name, 1);
       }
     }
 
@@ -118,25 +128,31 @@ if (countryInfo) {
   console.log(`----------------------------------------`);
   console.log(`Country info`);
 
-  let count2 = 0;
-  const nums = new Map();
   for (const country of [...countryLevelNums.keys()].sort((a, b) => countryLevelNums.get(b) - countryLevelNums.get(a))) {
   const num = countryLevelNums.get(country);
   console.log(`${country}: ${num}`);
   }
 }
 
+if (styleInfo) {
+  console.log(`----------------------------------------`);
+  console.log(`Style info`);
+
+  for (const style_name of [...styleLevelNums.keys()].sort((a, b) => styleLevelNums.get(b) - styleLevelNums.get(a))) {
+  const num = styleLevelNums.get(style_name);
+  console.log(`${style_name}: ${num}`);
+  }
+}
 
 if (themeInfo) {
   console.log(`----------------------------------------`);
   console.log(`Theme info`);
 
-  let count2 = 0;
-  const nums = new Map();
   for (const theme_name of [...themeLevelNums.keys()].sort((a, b) => themeLevelNums.get(b) - themeLevelNums.get(a))) {
   const num = themeLevelNums.get(theme_name);
   console.log(`${theme_name}: ${num}`);
   }
 }
+
 console.log(`----------------------------------------`);
 console.log(`Level nums: ${ids.length}`)
