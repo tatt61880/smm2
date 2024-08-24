@@ -6,11 +6,11 @@ const ids = idsText.split(/\r?\n/).filter((line) => /^\w{3}-\w{3}-\w{3}$/.test(l
 const unixTimeForComparing = new Date('2020-03-21T00:00:00').getTime() / 1000 - 9 * 3600;  // 比較用の Unix time (※ process.env.TZ = 'Asia/Tokyo' の環境で実行する前提で調整しています。)
 // console.log(unixTimeForComparing);
 
-const makerInfo = false;
+const makerInfo = true;
+const countryInfo = true;
+
 const makerLevelNums = new Map();
 const makerCodeToName = new Map();
-
-const countryInfo = false;
 const countryLevelNums = new Map();
 
 let count = 0;
@@ -101,6 +101,7 @@ if (makerInfo) {
     console.log(`${num}: ${count3}`);
   }
   console.log(`(1+: ${sum})`); 
+  console.log(`(2+: ${sum - nums.get(1)})`); 
 }
 
 if (countryInfo) {
@@ -114,3 +115,6 @@ if (countryInfo) {
   console.log(`${country} ${num}`);
   }
 }
+
+console.log(`----------------------------------------`);
+console.log(`Level nums: ${ids.length}`)
