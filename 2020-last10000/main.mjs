@@ -18,9 +18,9 @@ for (let id of ids) {
     const uploaded = json.uploaded;  // 投稿日時の Unix Time
 
     const upload_time = json.upload_time;  // 10000 = 10 seconds.
-    const country = json.uploader.country;  // 'US', 'JP', 'MX', ...
     const game_style_name = json.game_style_name;  // 'SMB1', 'SMB3', 'SMW', 'NSMBU', 'SM3DW'
-
+    const theme_name = json.theme_name;  // 'Castle', 'Ghost house', 'Airship', 'Overworld', 'Sky', 'Desert', 'Snow', 'Underground'
+    
     const clears = json.clears;
     const attempts = json.attempts;
     const plays = json.plays;  // footprints
@@ -28,7 +28,10 @@ for (let id of ids) {
     const likes = json.likes;
     const boos = json.boos;
 
-    if (uploaded <= unixTimeForComparing) {
+    const country = json.uploader.country;  // 'US', 'JP', 'MX', ...
+    const uploader_code = json.uploader.code;
+
+    if (country === '') {
       console.log(`${id}`);
       count++;
     }
