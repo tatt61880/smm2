@@ -6,11 +6,11 @@ const ids = idsText.split(/\r?\n/).filter((line) => /^\w{3}-\w{3}-\w{3}$/.test(l
 const unixTimeForComparing = new Date('2020-03-21T00:00:00').getTime() / 1000 - 9 * 3600;  // 比較用の Unix time (※ process.env.TZ = 'Asia/Tokyo' の環境で実行する前提で調整しています。)
 // console.log(unixTimeForComparing);
 
-const makerInfo = true;
+const makerInfo = false;
 const makerLevelNums = new Map();
 const makerCodeToName = new Map();
 
-const countryInfo = true;
+const countryInfo = false;
 const countryLevelNums = new Map();
 
 let count = 0;
@@ -22,6 +22,7 @@ for (let id of ids) {
     const jsonText = fs.readFileSync(filename, 'utf-8');
     const json = JSON.parse(jsonText);
 
+    const levelName = json.name;
     const uploaded = json.uploaded;  // 投稿日時の Unix Time
 
     const upload_time = json.upload_time;  // 10000 = 10 seconds.
@@ -31,6 +32,7 @@ for (let id of ids) {
     const clears = json.clears;
     const attempts = json.attempts;
     const plays = json.plays;  // footprints
+    const versus_matches = json.versus_matches;
 
     const likes = json.likes;
     const boos = json.boos;
@@ -38,7 +40,6 @@ for (let id of ids) {
     const country = json.uploader.country;  // 'US', 'JP', 'MX', ...
     const uploader_code = json.uploader.code;
     const uploader_name = json.uploader.name;
-    
     
     if (makerInfo) {
       makerCodeToName.set(uploader_code, uploader_name);
@@ -58,8 +59,8 @@ for (let id of ids) {
       }
     }
 
-    if (upload_time < 20000) {
-      console.log(`${id}`);
+    if (versus_matches > 0) {
+      console.log(`${id}\t${versus_matches}\t${levelName}`);
       count++;
     }
   } catch (err) {
@@ -100,12 +101,14 @@ if (makerInfo) {
   console.log(`(1+: ${sum})`); 
 }
 
-console.log(`----------------------------------------`);
-console.log(`Country info`);
+if (countryInfo) {
+  console.log(`----------------------------------------`);
+  console.log(`Country info`);
 
-let count2 = 0;
-const nums = new Map();
-for (const country of [...countryLevelNums.keys()].sort((a, b) => countryLevelNums.get(b) - countryLevelNums.get(a))) {
+  let count2 = 0;
+  const nums = new Map();
+  for (const country of [...countryLevelNums.keys()].sort((a, b) => countryLevelNums.get(b) - countryLevelNums.get(a))) {
   const num = countryLevelNums.get(country);
   console.log(`${country} ${num}`);
+  }
 }
