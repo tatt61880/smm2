@@ -9,6 +9,9 @@ const unixTimeForComparing = new Date('2020-03-21T00:00:00').getTime() / 1000 - 
 const makerInfo = true;
 const makerLevelNums = new Map();
 
+const countryInfo = true;
+const countryLevelNums = new Map();
+
 let count = 0;
 for (let id of ids) {
   const id_ = id.replaceAll('-', '');
@@ -42,6 +45,14 @@ for (let id of ids) {
       }
     }
 
+    if (countryInfo) {
+      if (countryLevelNums.has(country)) {
+        countryLevelNums.set(country, countryLevelNums.get(country) + 1);
+      } else {
+        countryLevelNums.set(country, 1);
+      }
+    }
+
     if (upload_time < 20000) {
       console.log(`${id}`);
       count++;
@@ -55,6 +66,7 @@ console.log(`count = ${count}`);
 
 if (makerInfo) {
   console.log(`----------------------------------------`);
+  console.log(`Maker info`);
   let count2 = 0;
   const nums = new Map();
   for (const uploader_code of [...makerLevelNums.keys()].sort((a, b) => makerLevelNums.get(b) - makerLevelNums.get(a))) {
@@ -72,7 +84,7 @@ if (makerInfo) {
   
   console.log(`count2 = ${count2}`);
   
-  console.log(`----------------------------------------`);
+  console.log('');
   let sum = 0;
   for (const num of [...nums.keys()].sort((a, b) => nums.get(a) - nums.get(b))) {
     const count3 = nums.get(num);
@@ -80,4 +92,14 @@ if (makerInfo) {
     console.log(`${num}: ${count3}`);
   }
   console.log(`(1+: ${sum})`); 
+}
+
+console.log(`----------------------------------------`);
+console.log(`Country info`);
+
+let count2 = 0;
+const nums = new Map();
+for (const country of [...countryLevelNums.keys()].sort((a, b) => countryLevelNums.get(b) - countryLevelNums.get(a))) {
+  const num = countryLevelNums.get(country);
+  console.log(`${country} ${num}`);
 }
