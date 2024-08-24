@@ -8,10 +8,12 @@ const unixTimeForComparing = new Date('2020-03-21T00:00:00').getTime() / 1000 - 
 
 const makerInfo = true;
 const countryInfo = true;
+const themeInfo = true;
 
 const makerLevelNums = new Map();
 const makerCodeToName = new Map();
 const countryLevelNums = new Map();
+const themeLevelNums = new Map();
 
 let count = 0;
 for (let id of ids) {
@@ -61,6 +63,14 @@ for (let id of ids) {
       }
     }
 
+    if (themeInfo) {
+      if (themeLevelNums.has(theme_name)) {
+        themeLevelNums.set(theme_name, themeLevelNums.get(theme_name) + 1);
+      } else {
+        themeLevelNums.set(theme_name, 1);
+      }
+    }
+
     if (versus_rating !== 0 && versus_rating < 100) {
       console.log(`${id}\t${versus_rating}\t${levelName}`);
       count++;
@@ -86,7 +96,7 @@ if (makerInfo) {
       nums.set(num, 1);
     }
     if (num > 3) {
-      console.log(`${uploader_code} ${num} ${name}`);
+      console.log(`${uploader_code}: ${num} ${name}`);
       count2++;
     }
   }
@@ -112,9 +122,21 @@ if (countryInfo) {
   const nums = new Map();
   for (const country of [...countryLevelNums.keys()].sort((a, b) => countryLevelNums.get(b) - countryLevelNums.get(a))) {
   const num = countryLevelNums.get(country);
-  console.log(`${country} ${num}`);
+  console.log(`${country}: ${num}`);
   }
 }
 
+
+if (themeInfo) {
+  console.log(`----------------------------------------`);
+  console.log(`Theme info`);
+
+  let count2 = 0;
+  const nums = new Map();
+  for (const theme_name of [...themeLevelNums.keys()].sort((a, b) => themeLevelNums.get(b) - themeLevelNums.get(a))) {
+  const num = themeLevelNums.get(theme_name);
+  console.log(`${theme_name}: ${num}`);
+  }
+}
 console.log(`----------------------------------------`);
 console.log(`Level nums: ${ids.length}`)
