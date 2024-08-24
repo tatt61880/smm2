@@ -28,7 +28,7 @@ for (let id of ids) {
     const upload_time = json.upload_time;  // 10000 = 10 seconds.
     const game_style_name = json.game_style_name;  // 'SMB1', 'SMB3', 'SMW', 'NSMBU', 'SM3DW'
     const theme_name = json.theme_name;  // 'Castle', 'Ghost house', 'Airship', 'Overworld', 'Sky', 'Desert', 'Snow', 'Underground'
-    
+
     const clears = json.clears;
     const attempts = json.attempts;
     const plays = json.plays;  // footprints
@@ -40,6 +40,8 @@ for (let id of ids) {
     const country = json.uploader.country;  // 'US', 'JP', 'MX', ...
     const uploader_code = json.uploader.code;
     const uploader_name = json.uploader.name;
+    const versus_rank = json.uploader.versus_rank;  // 3 => B
+    const versus_rating = json.uploader.versus_rating;
     
     if (makerInfo) {
       makerCodeToName.set(uploader_code, uploader_name);
@@ -59,8 +61,8 @@ for (let id of ids) {
       }
     }
 
-    if (versus_matches > 0) {
-      console.log(`${id}\t${versus_matches}\t${levelName}`);
+    if (versus_rating !== 0 && versus_rating < 100) {
+      console.log(`${id}\t${versus_rating}\t${levelName}`);
       count++;
     }
   } catch (err) {
