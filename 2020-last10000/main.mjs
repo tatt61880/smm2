@@ -38,6 +38,8 @@ for (let id of ids) {
     const plays = json.plays;  // footprints
     const versus_matches = json.versus_matches;
 
+    const comments = json.num_comments;
+
     const likes = json.likes;
     const boos = json.boos;
 
@@ -81,7 +83,8 @@ for (let id of ids) {
       }
     }
 
-    if (/トロール/.test(levelName)) {
+    // if (/トロール/.test(levelName)) {
+    if (comments > 10) {
       console.log(`${id}\t${levelName}`);
       count++;
     }
