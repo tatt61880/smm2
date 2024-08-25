@@ -10,6 +10,7 @@ const makerInfo = true;
 const countryInfo = true;
 const styleInfo = true;
 const themeInfo = true;
+const tagInfo = true;
 const conditionInfo = true;
 
 const makerLevelNums = new Map();
@@ -17,6 +18,7 @@ const makerCodeToName = new Map();
 const countryLevelNums = new Map();
 const styleLevelNums = new Map();
 const themeLevelNums = new Map();
+const tagLevelNums = new Map();
 const conditionLevelNums = new Map();
 
 let count = 0;
@@ -35,6 +37,10 @@ for (let id of ids) {
     const upload_time = json.upload_time;  // 10000 = 10 seconds.
     const style_name = json.game_style_name;  // 'SMB1', 'SMB3', 'SMW', 'NSMBU', 'SM3DW'
     const theme_name = json.theme_name;  // 'Castle', 'Ghost house', 'Airship', 'Overworld', 'Sky', 'Desert', 'Snow', 'Underground'
+
+    const tags_name = json.tags_name;
+    const tag1_name = tags_name[0];
+    const tag2_name = tags_name[1];
 
     const condition_name = json.clear_condition_name;
 
@@ -88,6 +94,22 @@ for (let id of ids) {
       }
     }
 
+    if (tagInfo) {
+      if (tagLevelNums.has(tag1_name)) {
+        tagLevelNums.set(tag1_name, tagLevelNums.get(tag1_name) + 1);
+      } else {
+        tagLevelNums.set(tag1_name, 1);
+      }
+
+      if (tag1_name !== tag2_name) {
+        if (tagLevelNums.has(tag2_name)) {
+          tagLevelNums.set(tag2_name, tagLevelNums.get(tag2_name) + 1);
+        } else {
+          tagLevelNums.set(tag2_name, 1);
+        }
+      }
+    }
+
     if (conditionInfo) {
       if (conditionLevelNums.has(condition_name)) {
         conditionLevelNums.set(condition_name, conditionLevelNums.get(condition_name) + 1);
@@ -100,7 +122,8 @@ for (let id of ids) {
 
     // if (/トロール/.test(levelName)) {
     // if (comments > 10) {
-    if (condition_name === 'Reach the goal without landing after leaving the ground.') {
+    // if (condition_name === 'Reach the goal without landing after leaving the ground.') {
+    if (tag1_name === 'None') {
       console.log(`${id}\t${levelName}`);
       count++;
     }
@@ -110,7 +133,6 @@ for (let id of ids) {
 }
 
 console.log(`count = ${count}`);
-console.log(`Total Clear-check time: ${totalClearCheckTime} (${ids.length} levels)`);
 
 if (makerInfo) {
   console.log(`----------------------------------------`);
@@ -174,6 +196,16 @@ if (themeInfo) {
   }
 }
 
+if (tagInfo) {
+  console.log(`----------------------------------------`);
+  console.log(`Tag info`);
+
+  for (const tag_name of [...tagLevelNums.keys()].sort((a, b) => tagLevelNums.get(b) - tagLevelNums.get(a))) {
+  const num = tagLevelNums.get(tag_name);
+  console.log(`${tag_name}: ${num}`);
+  }
+}
+
 if (conditionInfo) {
   console.log(`----------------------------------------`);
   console.log(`Condition info`);
@@ -186,3 +218,4 @@ if (conditionInfo) {
 
 console.log(`----------------------------------------`);
 console.log(`Level nums: ${ids.length}`)
+console.log(`Total Clear-check time: ${totalClearCheckTime} (${ids.length} levels)`);
