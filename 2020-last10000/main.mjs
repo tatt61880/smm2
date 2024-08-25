@@ -6,11 +6,11 @@ const ids = idsText.split(/\r?\n/).filter((line) => /^\w{3}-\w{3}-\w{3}$/.test(l
 const unixTimeForComparing = new Date('2020-03-21T00:00:00').getTime() / 1000 - 9 * 3600;  // 比較用の Unix time (※ process.env.TZ = 'Asia/Tokyo' の環境で実行する前提で調整しています。)
 // console.log(unixTimeForComparing);
 
-const makerInfo = true;
-const countryInfo = true;
-const styleInfo = true;
-const themeInfo = true;
-const tagInfo = true;
+const makerInfo = false;
+const countryInfo = false;
+const styleInfo = false;
+const themeInfo = false;
+const tagInfo = false;
 const conditionInfo = true;
 
 const makerLevelNums = new Map();
@@ -60,61 +60,63 @@ for (let id of ids) {
     const versus_rank = json.uploader.versus_rank;  // 3 => B
     const versus_rating = json.uploader.versus_rating;
     
-    if (makerInfo) {
-      makerCodeToName.set(uploader_code, uploader_name);
+    {
+      if (makerInfo) {
+        makerCodeToName.set(uploader_code, uploader_name);
 
-      if (makerLevelNums.has(uploader_code)) {
-        makerLevelNums.set(uploader_code, makerLevelNums.get(uploader_code) + 1);
-      } else {
-        makerLevelNums.set(uploader_code, 1);
-      }
-    }
-
-    if (countryInfo) {
-      if (countryLevelNums.has(country)) {
-        countryLevelNums.set(country, countryLevelNums.get(country) + 1);
-      } else {
-        countryLevelNums.set(country, 1);
-      }
-    }
-
-    if (styleInfo) {
-      if (styleLevelNums.has(style_name)) {
-        styleLevelNums.set(style_name, styleLevelNums.get(style_name) + 1);
-      } else {
-        styleLevelNums.set(style_name, 1);
-      }
-    }
-
-    if (themeInfo) {
-      if (themeLevelNums.has(theme_name)) {
-        themeLevelNums.set(theme_name, themeLevelNums.get(theme_name) + 1);
-      } else {
-        themeLevelNums.set(theme_name, 1);
-      }
-    }
-
-    if (tagInfo) {
-      if (tagLevelNums.has(tag1_name)) {
-        tagLevelNums.set(tag1_name, tagLevelNums.get(tag1_name) + 1);
-      } else {
-        tagLevelNums.set(tag1_name, 1);
-      }
-
-      if (tag1_name !== tag2_name) {
-        if (tagLevelNums.has(tag2_name)) {
-          tagLevelNums.set(tag2_name, tagLevelNums.get(tag2_name) + 1);
+        if (makerLevelNums.has(uploader_code)) {
+          makerLevelNums.set(uploader_code, makerLevelNums.get(uploader_code) + 1);
         } else {
-          tagLevelNums.set(tag2_name, 1);
+          makerLevelNums.set(uploader_code, 1);
         }
       }
-    }
 
-    if (conditionInfo) {
-      if (conditionLevelNums.has(condition_name)) {
-        conditionLevelNums.set(condition_name, conditionLevelNums.get(condition_name) + 1);
-      } else {
-        conditionLevelNums.set(condition_name, 1);
+      if (countryInfo) {
+        if (countryLevelNums.has(country)) {
+          countryLevelNums.set(country, countryLevelNums.get(country) + 1);
+        } else {
+          countryLevelNums.set(country, 1);
+        }
+      }
+
+      if (styleInfo) {
+        if (styleLevelNums.has(style_name)) {
+          styleLevelNums.set(style_name, styleLevelNums.get(style_name) + 1);
+        } else {
+          styleLevelNums.set(style_name, 1);
+        }
+      }
+
+      if (themeInfo) {
+        if (themeLevelNums.has(theme_name)) {
+          themeLevelNums.set(theme_name, themeLevelNums.get(theme_name) + 1);
+        } else {
+          themeLevelNums.set(theme_name, 1);
+        }
+      }
+
+      if (tagInfo) {
+        if (tagLevelNums.has(tag1_name)) {
+          tagLevelNums.set(tag1_name, tagLevelNums.get(tag1_name) + 1);
+        } else {
+          tagLevelNums.set(tag1_name, 1);
+        }
+
+        if (tag1_name !== tag2_name) {
+          if (tagLevelNums.has(tag2_name)) {
+            tagLevelNums.set(tag2_name, tagLevelNums.get(tag2_name) + 1);
+          } else {
+            tagLevelNums.set(tag2_name, 1);
+          }
+        }
+      }
+
+      if (conditionInfo) {
+        if (conditionLevelNums.has(condition_name)) {
+          conditionLevelNums.set(condition_name, conditionLevelNums.get(condition_name) + 1);
+        } else {
+          conditionLevelNums.set(condition_name, 1);
+        }
       }
     }
 
@@ -123,8 +125,9 @@ for (let id of ids) {
     // if (/トロール/.test(levelName)) {
     // if (comments > 10) {
     // if (condition_name === 'Reach the goal without landing after leaving the ground.') {
-    if (tag1_name === 'None') {
-      console.log(`${id}\t${levelName}`);
+    // if (tag1_name === 'Link' || tag2_name === 'Link') {
+    if (versus_rating > 6500) {
+      console.log(`${id}\t${versus_rating}\t${levelName}`);
       count++;
     }
   } catch (err) {
