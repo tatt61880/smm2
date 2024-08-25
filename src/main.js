@@ -17,10 +17,12 @@
 
     const codeInInputStrMap = new Map();
     const levelCodeSet = new Set();
-    const levelCodes = []; 
+    const levelCodes = [];
 
-    let m;
-    while (m = re.exec(inputText)) {
+    while (true) {
+      const m = re.exec(inputText);
+      if (!m) break;
+
       const levelCode = `${m[1].toUpperCase()}-${m[2].toUpperCase()}-${m[3].toUpperCase()}`;
       const codeInInputStr = m[0];
 
