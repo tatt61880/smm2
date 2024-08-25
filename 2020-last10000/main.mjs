@@ -10,12 +10,14 @@ const makerInfo = true;
 const countryInfo = true;
 const styleInfo = true;
 const themeInfo = true;
+const conditionInfo = true;
 
 const makerLevelNums = new Map();
 const makerCodeToName = new Map();
 const countryLevelNums = new Map();
 const styleLevelNums = new Map();
 const themeLevelNums = new Map();
+const conditionLevelNums = new Map();
 
 let count = 0;
 let totalClearCheckTime = 0;
@@ -33,6 +35,8 @@ for (let id of ids) {
     const upload_time = json.upload_time;  // 10000 = 10 seconds.
     const style_name = json.game_style_name;  // 'SMB1', 'SMB3', 'SMW', 'NSMBU', 'SM3DW'
     const theme_name = json.theme_name;  // 'Castle', 'Ghost house', 'Airship', 'Overworld', 'Sky', 'Desert', 'Snow', 'Underground'
+
+    const condition_name = json.clear_condition_name;
 
     const clears = json.clears;
     const attempts = json.attempts;
@@ -83,11 +87,20 @@ for (let id of ids) {
         themeLevelNums.set(theme_name, 1);
       }
     }
+
+    if (conditionInfo) {
+      if (conditionLevelNums.has(condition_name)) {
+        conditionLevelNums.set(condition_name, conditionLevelNums.get(condition_name) + 1);
+      } else {
+        conditionLevelNums.set(condition_name, 1);
+      }
+    }
+
     totalClearCheckTime += upload_time;
 
     // if (/トロール/.test(levelName)) {
     // if (comments > 10) {
-    if (upload_time < 30000) {
+    if (condition_name === 'Reach the goal without landing after leaving the ground.') {
       console.log(`${id}\t${levelName}`);
       count++;
     }
@@ -158,6 +171,16 @@ if (themeInfo) {
   for (const theme_name of [...themeLevelNums.keys()].sort((a, b) => themeLevelNums.get(b) - themeLevelNums.get(a))) {
   const num = themeLevelNums.get(theme_name);
   console.log(`${theme_name}: ${num}`);
+  }
+}
+
+if (conditionInfo) {
+  console.log(`----------------------------------------`);
+  console.log(`Condition info`);
+
+  for (const condition_name of [...conditionLevelNums.keys()].sort((a, b) => conditionLevelNums.get(b) - conditionLevelNums.get(a))) {
+  const num = conditionLevelNums.get(condition_name);
+  console.log(`${condition_name}: ${num}`);
   }
 }
 
