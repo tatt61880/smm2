@@ -18,6 +18,7 @@ const styleLevelNums = new Map();
 const themeLevelNums = new Map();
 
 let count = 0;
+let totalClearCheckTime = 0;
 for (let id of ids) {
   const id_ = id.replaceAll('-', '');
   const filename = `./json/${id_}.json`;
@@ -82,9 +83,11 @@ for (let id of ids) {
         themeLevelNums.set(theme_name, 1);
       }
     }
+    totalClearCheckTime += upload_time;
 
     // if (/トロール/.test(levelName)) {
-    if (comments > 10) {
+    // if (comments > 10) {
+    if (upload_time < 30000) {
       console.log(`${id}\t${levelName}`);
       count++;
     }
@@ -94,6 +97,7 @@ for (let id of ids) {
 }
 
 console.log(`count = ${count}`);
+console.log(`Total Clear-check time: ${totalClearCheckTime} (${ids.length} levels)`);
 
 if (makerInfo) {
   console.log(`----------------------------------------`);
