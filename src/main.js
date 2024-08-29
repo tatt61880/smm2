@@ -1,6 +1,6 @@
 (function () {
   'use strict';
-  const version = 'Version: 2024.07.17';
+  const version = 'Version: 2024.08.30';
 
   window.onload = function () {
     document.getElementById('version-info').innerText = version;
@@ -42,7 +42,7 @@
       if (codeInInputStr !== levelCode) {
         codeInfo = ` (${codeInInputStr})`;
       }
-      result += `<a target="_blank" href="https://smm2.wizul.us/smm2/level/${levelCode}">${levelCode}</a>${codeInfo}<br>`;
+      result += `<a target="_blank" href="https://smm2.wizul.us/smm2/level/${levelCode}" class="level-code">${levelCode}</a>${codeInfo}<br>`;
     }
 
     document.getElementById('result').innerHTML = result;

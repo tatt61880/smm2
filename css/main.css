@@ -70,3 +70,7 @@ button:hover {
   font-weight: bold;
   color: gray;
 }
+
+.level-code {
+  font-family: monospace;
+}
