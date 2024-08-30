@@ -42,7 +42,8 @@
       if (codeInInputStr !== levelCode) {
         codeInfo = ` (${codeInInputStr})`;
       }
-      result += `<a target="_blank" href="https://smm2.wizul.us/smm2/level/${levelCode}" class="level-code">${levelCode}</a>${codeInfo}<br>`;
+      const viewerUrl = `https://smm2.wizul.us/smm2/level/${levelCode}`;
+      result += `<span class="level-code">${levelCode}: <a target="_blank" href="${viewerUrl}">${viewerUrl}</a>${codeInfo}</span><br>`;
     }
 
     document.getElementById('result').innerHTML = result;
