@@ -1,16 +1,18 @@
 (function () {
   'use strict';
-  const version = 'Version: 2024.09.02';
+  const version = 'Version: 2024.09.02b';
 
   window.onload = function () {
     document.getElementById('version-info').innerText = version;
     document.getElementById('input-text').addEventListener('input', update, false);
+    document.getElementById('options-url-only').addEventListener('change', update, false);
 
     update();
   };
 
   function update() {
     const inputText = document.getElementById('input-text').value;
+    const urlOnly = document.getElementById('options-url-only').checked;
 
     let result = '';
     const re = /\b([B-DF-HJ-NP-TV-Y0-9]{3})-?([B-DF-HJ-NP-TV-Y0-9]{3})-?([B-DF-HJ-NP-TV-Y0-9]{3})\b/gi;
@@ -49,7 +51,11 @@
       const codeInfo = codeInfoMap.get(code);
       const type = codeInfo.d === 1n ? 'maker' : 'level';
       const viewerUrl = `https://smm2.wizul.us/smm2/${type}/${code}`;
-      result += `<span class="level-code">${code}: <a target="_blank" href="${viewerUrl}">${viewerUrl}</a>${textInfo}</span><br>`;
+      if (urlOnly) {
+        result += `<span class="level-code"><a target="_blank" href="${viewerUrl}">${viewerUrl}</a></span><br>`;
+      } else {
+        result += `<span class="level-code">${code}: <a target="_blank" href="${viewerUrl}">${viewerUrl}</a>${textInfo}</span><br>`;
+      }
     }
 
     document.getElementById('result').innerHTML = result;
