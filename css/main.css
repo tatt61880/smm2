@@ -38,7 +38,7 @@ div.inner {
 }
 
 #result {
-  margin-bottom: 5px;
+  margin: 5px;
   background-color: #f8f8ff;
   border: solid 3px skyblue;
 }
@@ -76,7 +76,21 @@ button:hover {
 }
 
 input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+
+label,
+input[type="checkbox"] {
+  display: inline-block;
+  padding: 2px 5px;
+  margin: 5px;
+  vertical-align: middle;
   cursor: pointer;
+
+  &:hover {
+    background-color: #ffffdd;
+  }
 }
 
 .note {
