@@ -1,6 +1,6 @@
 (function () {
   'use strict';
-  const version = 'Version: 2024.09.02b';
+  const version = 'Version: 2024.09.02c';
 
   window.onload = function () {
     document.getElementById('version-info').innerText = version;

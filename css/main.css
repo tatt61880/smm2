@@ -78,3 +78,8 @@ button:hover {
 input[type="checkbox"] {
   cursor: pointer;
 }
+
+.note {
+  font-weight: bold;
+  color: #dd0000;
+}
