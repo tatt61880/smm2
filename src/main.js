@@ -1,6 +1,6 @@
 (function () {
   'use strict';
-  const version = 'Version: 2024.09.03';
+  const version = 'Version:' + '2025.03.08';
 
   window.onload = function () {
     document.getElementById('version-info').innerText = version;
@@ -40,6 +40,10 @@
         const codeInfo = getCodeInfo(code);
         codeInfoMap.set(codePretty, codeInfo);
       }
+    }
+
+    if (!urlOnly) {
+      result += `${codes.length} levels found in text.<br>`;
     }
 
     for (const code of codes) {
