@@ -43,7 +43,7 @@
     }
 
     if (!urlOnly) {
-      result += `${codes.length} levels found in text.<br>`;
+      result += `${codes.length} ${codes.length === 1 ? 'level' : 'levels'} found in text.<br>`;
     }
 
     for (const code of codes) {
