@@ -4,8 +4,12 @@
 
   window.onload = function () {
     document.getElementById('version-info').innerText = version;
-    document.getElementById('input-text').addEventListener('input', update, false);
-    document.getElementById('options-url-only').addEventListener('change', update, false);
+    document
+      .getElementById('input-text')
+      .addEventListener('input', update, false);
+    document
+      .getElementById('options-url-only')
+      .addEventListener('change', update, false);
 
     update();
   };
@@ -15,7 +19,8 @@
     const urlOnly = document.getElementById('options-url-only').checked;
 
     let result = '';
-    const re = /\b([B-DF-HJ-NP-TV-Y0-9]{3})-?([B-DF-HJ-NP-TV-Y0-9]{3})-?([B-DF-HJ-NP-TV-Y0-9]{3})\b/gi;
+    const re =
+      /\b([B-DF-HJ-NP-TV-Y0-9]{3})-?([B-DF-HJ-NP-TV-Y0-9]{3})-?([B-DF-HJ-NP-TV-Y0-9]{3})\b/gi;
 
     const codeInInputStrMap = new Map();
     const codeSet = new Set();
@@ -43,7 +48,9 @@
     }
 
     if (!urlOnly) {
-      result += `${codes.length} ${codes.length === 1 ? 'level' : 'levels'} found in text.<br>`;
+      result += `${codes.length} ${
+        codes.length === 1 ? 'level' : 'levels'
+      } found in text.<br>`;
     }
 
     for (const code of codes) {
@@ -67,12 +74,36 @@
 
   function getCodeInfo(code) {
     const cToVal = {
-      '0': 0, '1': 1, '2': 2, '3': 3, '4': 4,
-      '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
-      'B': 10, 'C': 11, 'D': 12, 'F': 13, 'G': 14,
-      'H': 15, 'J': 16, 'K': 17, 'L': 18, 'M': 19,
-      'N': 20, 'P': 21, 'Q': 22, 'R': 23, 'S': 24,
-      'T': 25, 'V': 26, 'W': 27, 'X': 28, 'Y': 29
+      0: 0,
+      1: 1,
+      2: 2,
+      3: 3,
+      4: 4,
+      5: 5,
+      6: 6,
+      7: 7,
+      8: 8,
+      9: 9,
+      B: 10,
+      C: 11,
+      D: 12,
+      F: 13,
+      G: 14,
+      H: 15,
+      J: 16,
+      K: 17,
+      L: 18,
+      M: 19,
+      N: 20,
+      P: 21,
+      Q: 22,
+      R: 23,
+      S: 24,
+      T: 25,
+      V: 26,
+      W: 27,
+      X: 28,
+      Y: 29,
     };
 
     let num = 0;
@@ -98,7 +129,7 @@
     const e = vals[4];
     const f = vals[5];
 
-    const n = 0x1680E07Cn ^ (c | (f << 20n));
+    const n = 0x1680e07cn ^ (c | (f << 20n));
 
     return { a, b, c, d, e, f, n };
   }
