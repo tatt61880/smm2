@@ -1,136 +1,207 @@
 (function () {
   'use strict';
-  const version = 'Version:' + '2025.03.08';
 
-  window.onload = function () {
-    document.getElementById('version-info').innerText = version;
-    document
-      .getElementById('input-text')
-      .addEventListener('input', update, false);
-    document
-      .getElementById('options-url-only')
-      .addEventListener('change', update, false);
+  const { viewers, extractCodes, getLinks } = window.Smm2Tool;
+  const storageKey = 'smm2-tool-preferences-v1';
+  const input = document.getElementById('input-text');
+  const viewerOptions = [...document.querySelectorAll('input[name="viewer"]')];
+  const urlOnly = document.getElementById('options-url-only');
+  const result = document.getElementById('result');
+  const summary = document.getElementById('result-summary');
+  const actionStatus = document.getElementById('action-status');
+  const copyUrlsButton = document.getElementById('copy-urls');
+  const copyCodesButton = document.getElementById('copy-codes');
+  const clearButton = document.getElementById('input-clear');
+  let currentCodes = [];
+  let currentUrls = [];
 
+  document.getElementById('version-info').textContent = 'Version 2026.10.25';
+  restorePreferences();
+  input.addEventListener('input', update);
+  document.getElementById('input-example').addEventListener('click', () => {
+    input.value = 'Course: 7WC-8BR-XBG\nMaker: XL2-72J-7GF\nThe same course, pasted again: ７ＷＣ－８ＢＲ－ＸＢＧ';
     update();
-  };
+    input.focus();
+  });
+  clearButton.addEventListener('click', () => {
+    input.value = '';
+    update();
+    input.focus();
+  });
+  for (const control of [...viewerOptions, urlOnly]) {
+    control.addEventListener('change', () => {
+      savePreferences();
+      update();
+    });
+  }
+  copyUrlsButton.addEventListener('click', () => {
+    copyText(currentUrls.join('\n'), `${plural(currentUrls.length, 'URL')} copied.`);
+  });
+  copyCodesButton.addEventListener('click', () => {
+    copyText(currentCodes.map((entry) => entry.code).join('\n'), `${plural(currentCodes.length, 'code')} copied.`);
+  });
+  update();
 
-  function update() {
-    const inputText = document.getElementById('input-text').value;
-    const urlOnly = document.getElementById('options-url-only').checked;
-
-    let result = '';
-    const re =
-      /\b([B-DF-HJ-NP-TV-Y0-9]{3})-?([B-DF-HJ-NP-TV-Y0-9]{3})-?([B-DF-HJ-NP-TV-Y0-9]{3})\b/gi;
-
-    const codeInInputStrMap = new Map();
-    const codeSet = new Set();
-    const codes = [];
-    const codeInfoMap = new Map();
-
-    while (true) {
-      const m = re.exec(inputText);
-      if (!m) break;
-
-      const code = `${m[1].toUpperCase()}${m[2].toUpperCase()}${m[3].toUpperCase()}`;
-      const codePretty = `${m[1].toUpperCase()}-${m[2].toUpperCase()}-${m[3].toUpperCase()}`;
-      const codeInInputStr = m[0];
-
-      if (!codeInInputStrMap.has(codePretty) || codeInInputStr === codePretty) {
-        codeInInputStrMap.set(codePretty, codeInInputStr);
-      }
-
-      if (!codeSet.has(codePretty)) {
-        codeSet.add(codePretty);
-        codes.push(codePretty);
-        const codeInfo = getCodeInfo(code);
-        codeInfoMap.set(codePretty, codeInfo);
-      }
-    }
-
-    if (!urlOnly) {
-      result += `${codes.length} ${
-        codes.length === 1 ? 'level' : 'levels'
-      } found in text.<br>`;
-    }
-
-    for (const code of codes) {
-      const codeInInputStr = codeInInputStrMap.get(code);
-      let textInfo = '';
-      if (codeInInputStr !== code) {
-        textInfo = ` (${codeInInputStr})`;
-      }
-      const codeInfo = codeInfoMap.get(code);
-      const type = codeInfo.d === 1n ? 'maker' : 'level';
-      const viewerUrl = `https://smm2.wizul.us/smm2/${type}/${code}`;
-      if (urlOnly) {
-        result += `<span class="level-code"><a target="_blank" href="${viewerUrl}">${viewerUrl}</a></span><br>`;
-      } else {
-        result += `<span class="level-code">${code}: <a target="_blank" href="${viewerUrl}">${viewerUrl}</a>${textInfo}</span><br>`;
-      }
-    }
-
-    document.getElementById('result').innerHTML = result;
+  function selectedViewerIds() {
+    return viewerOptions.filter((option) => option.checked).map((option) => option.value);
   }
 
-  function getCodeInfo(code) {
-    const cToVal = {
-      0: 0,
-      1: 1,
-      2: 2,
-      3: 3,
-      4: 4,
-      5: 5,
-      6: 6,
-      7: 7,
-      8: 8,
-      9: 9,
-      B: 10,
-      C: 11,
-      D: 12,
-      F: 13,
-      G: 14,
-      H: 15,
-      J: 16,
-      K: 17,
-      L: 18,
-      M: 19,
-      N: 20,
-      P: 21,
-      Q: 22,
-      R: 23,
-      S: 24,
-      T: 25,
-      V: 26,
-      W: 27,
-      X: 28,
-      Y: 29,
-    };
+  function restorePreferences() {
+    try {
+      const preferences = JSON.parse(localStorage.getItem(storageKey));
+      if (!preferences || typeof preferences !== 'object') return;
 
-    let num = 0;
-    for (const c of code.split('').reverse()) {
-      num *= 30;
-      num += cToVal[c];
+      if (Array.isArray(preferences.viewers) && preferences.viewers.every((id) => viewers.some((viewer) => viewer.id === id))) {
+        for (const option of viewerOptions) {
+          option.checked = preferences.viewers.includes(option.value);
+        }
+      }
+      if (typeof preferences.urlOnly === 'boolean') {
+        urlOnly.checked = preferences.urlOnly;
+      }
+    } catch {
+      // Blocked storage or invalid saved data must not prevent code conversion.
+    }
+  }
+
+  function savePreferences() {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify({
+        viewers: selectedViewerIds(),
+        urlOnly: urlOnly.checked,
+      }));
+    } catch {
+      // Preferences are optional; the pasted text is never stored.
+    }
+  }
+
+  function plural(count, word) {
+    return `${count} ${word}${count === 1 ? '' : 's'}`;
+  }
+
+  function element(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text;
+    return node;
+  }
+
+  function createLink(link, onlyUrl) {
+    const anchor = element('a', onlyUrl ? '' : 'viewer-link');
+    anchor.href = link.url;
+    anchor.target = '_blank';
+    anchor.rel = 'noopener noreferrer';
+    if (onlyUrl) {
+      anchor.textContent = link.url;
+    } else {
+      anchor.append(
+        element('span', 'viewer-link-name', `${link.name} ↗`),
+        element('span', 'viewer-link-note', link.note)
+      );
+    }
+    return anchor;
+  }
+
+  function renderCard(entry, links, selected) {
+    const card = element('article', 'result-card');
+    const heading = element('div', 'result-heading');
+    const kind = element('span', `code-kind${entry.type === 'maker' ? ' maker-badge' : ''}`, entry.type === 'maker' ? 'Maker' : 'Course');
+    const copy = element('button', 'row-copy', 'Copy code');
+    copy.type = 'button';
+    copy.setAttribute('aria-label', `Copy code ${entry.code}`);
+    copy.addEventListener('click', () => copyText(entry.code, `${entry.code} copied.`));
+    heading.append(element('code', 'code-label', entry.code), kind, copy);
+    card.append(heading);
+
+    if (entry.count > 1) {
+      card.append(element('p', 'duplicate-note', `Found ${entry.count} times · shown once`));
+    }
+    const linkGroup = element('div', 'viewer-links');
+    for (const link of links) linkGroup.append(createLink(link, false));
+    card.append(linkGroup);
+    if (!selected.length) {
+      card.append(element('p', 'no-viewer-note', 'Select a viewer above to generate links.'));
+    } else if (!links.length) {
+      card.append(element('p', 'no-viewer-note', 'The selected viewer supports course codes only. Select a maker-compatible viewer above.'));
+    } else if (entry.type === 'maker' && selected.includes('thumbnail')) {
+      card.append(element('p', 'no-viewer-note', 'Course thumbnails are available for course codes only.'));
+    }
+    return card;
+  }
+
+  function update() {
+    const extracted = extractCodes(input.value);
+    const selected = selectedViewerIds();
+    const courseCount = extracted.codes.filter((entry) => entry.type === 'course').length;
+    const makerCount = extracted.codes.length - courseCount;
+    const entries = extracted.codes.map((entry) => ({ entry, links: getLinks(entry, selected) }));
+    currentCodes = extracted.codes;
+    currentUrls = entries.flatMap(({ links }) => links.map((link) => link.url));
+    copyUrlsButton.disabled = !currentUrls.length;
+    copyCodesButton.disabled = !currentCodes.length;
+    clearButton.disabled = !input.value;
+    actionStatus.textContent = '';
+
+    const counts = `${plural(courseCount, 'course')} · ${plural(makerCount, 'maker')} · ${plural(currentUrls.length, 'link')}`;
+    summary.textContent = extracted.duplicates ? `${counts} · ${plural(extracted.duplicates, 'duplicate')} removed` : counts;
+    const fragment = document.createDocumentFragment();
+    if (!currentCodes.length) {
+      fragment.append(element('p', 'empty-state', input.value.trim()
+        ? 'No codes found. Use a 9-character code such as 7WC-8BR-XBG. A, E, I, O, U and Z are not used in SMM2 codes.'
+        : 'Paste a post, a viewer URL, or a list of codes above. Your links will appear here.'));
+    } else if (urlOnly.checked) {
+      const list = element('ul', 'url-list');
+      for (const { links } of entries) {
+        for (const link of links) {
+          const item = element('li', 'url-item');
+          item.append(createLink(link, true));
+          list.append(item);
+        }
+      }
+      fragment.append(list);
+      if (!selected.length) {
+        fragment.append(element('p', 'no-viewer-note', 'Select a viewer above to generate links.'));
+      } else {
+        const unsupported = entries.filter(({ links }) => !links.length).length;
+        if (unsupported) {
+          fragment.append(element('p', 'no-viewer-note', `${plural(unsupported, 'maker code')} cannot be linked with the selected viewer. Select a maker-compatible viewer above.`));
+        }
+      }
+    } else {
+      for (const { entry, links } of entries) fragment.append(renderCard(entry, links, selected));
+    }
+    result.replaceChildren(fragment);
+  }
+
+  async function copyText(text, message) {
+    try {
+      if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error('Clipboard unavailable');
+      await navigator.clipboard.writeText(text);
+      actionStatus.textContent = message;
+      return;
+    } catch {
+      // A local file or a browser permission can block the Clipboard API.
     }
 
-    const lengths = [12n, 1n, 1n, 20n, 6n, 4n];
-    const vals = [];
-    let numBigInt = BigInt(num);
-    for (const length of lengths) {
-      const mask = (1n << length) - 1n;
-      const val = numBigInt & mask;
-      vals.unshift(val);
-      numBigInt >>= length;
+    const activeElement = document.activeElement;
+    const inputSelection = activeElement === input
+      ? { start: input.selectionStart, end: input.selectionEnd }
+      : null;
+    const temporary = element('textarea', 'clipboard-buffer');
+    temporary.value = text;
+    temporary.setAttribute('readonly', '');
+    document.body.append(temporary);
+    temporary.select();
+    let copied = false;
+    try {
+      copied = document.execCommand('copy');
+    } catch {
+      // If both methods fail, give a clear instruction rather than claim success.
+    } finally {
+      temporary.remove();
+      if (activeElement) activeElement.focus({ preventScroll: true });
+      if (inputSelection) input.setSelectionRange(inputSelection.start, inputSelection.end);
     }
-
-    const a = vals[0];
-    const b = vals[1];
-    const c = vals[2];
-    const d = vals[3];
-    const e = vals[4];
-    const f = vals[5];
-
-    const n = 0x1680e07cn ^ (c | (f << 20n));
-
-    return { a, b, c, d, e, f, n };
+    actionStatus.textContent = copied ? message : 'Copy was blocked by your browser. Select and copy the codes or links manually.';
   }
 })();

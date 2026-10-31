@@ -1,36 +1,98 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 
 <head>
-  <title>SMM2 Tool</title>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=800, user-scalable=no">
-  <link rel="icon" type="image/x-icon" href="./images/favicon.png?2025.03.08">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Find Super Mario Maker 2 course and maker codes in text, and create links to your favorite viewers.">
+  <title>SMM2 Tool · Viewer links</title>
+  <link rel="icon" type="image/png" href="./images/favicon.png?2025.03.08">
   <link rel="apple-touch-icon" sizes="152x152" href="./images/apple-touch-icon.png?2025.03.08">
-
   <link rel="stylesheet" href="./css/main.css">
-
-  <script src="./src/main.js"></script>
+  <script defer src="./src/core.js"></script>
+  <script defer src="./src/main.js"></script>
 </head>
 
 <body>
-  <div id="contents">
-    <h1>SMM2 Tool: Level code(s) to viewer URL(s)</h1>
-    <div class="inner">
-      <span id="version-info">　</span><br>
+  <main id="contents">
+    <header class="app-header">
+      <div>
+        <h1>SMM2 Tool</h1>
+        <p class="subtitle">Level &amp; maker codes <span aria-hidden="true">→</span> viewer links</p>
+      </div>
+      <span id="version-info"></span>
+    </header>
 
-      <span>
-        Enter sentence including level code(s) and/or maker code(s).<br>
-      </span>
-      <span class="note">
-        Note: I recommend opening URLs one by one. Too many accesses will be bad.<br>
-      </span>
-      <textarea rows="10" id="input-text"></textarea><br>
+    <section class="panel input-panel" aria-labelledby="input-label">
+      <div class="section-heading">
+        <label id="input-label" for="input-text">Paste your text</label>
+        <div class="input-actions">
+          <button id="input-example" class="button-quiet" type="button">Try an example</button>
+          <button id="input-clear" class="button-quiet" type="button">Clear</button>
+        </div>
+      </div>
+      <textarea id="input-text" rows="6" spellcheck="false" autocomplete="off" autocapitalize="off"
+        aria-describedby="input-help"
+        placeholder="Course: 7WC-8BR-XBG&#10;Maker: XL2-72J-7GF&#10;&#10;You can also paste a post or a viewer URL."></textarea>
+      <p id="input-help" class="help-text">Paste codes, viewer URLs, or any text. Repeated codes are combined.</p>
 
-      <label for="options-url-only"><input type="checkbox" id="options-url-only"> Show only URLs in result</label>
-      <div id="result"></div>
-    </div>
-  </div>
+      <fieldset id="viewer-options">
+        <legend>Choose viewers</legend>
+        <div class="viewer-options-grid">
+          <label class="viewer-option" for="viewer-wizulus">
+            <input id="viewer-wizulus" type="checkbox" name="viewer" value="wizulus" checked>
+            <span><strong>Wizulus</strong><small>Course maps &amp; maker profiles</small></span>
+          </label>
+          <label class="viewer-option" for="viewer-smm2-viewer">
+            <input id="viewer-smm2-viewer" type="checkbox" name="viewer" value="smm2-viewer" checked>
+            <span><strong>SMM2 Viewer</strong><small>Course maps &amp; maker profiles</small></span>
+          </label>
+          <label class="viewer-option" for="viewer-cyzon">
+            <input id="viewer-cyzon" type="checkbox" name="viewer" value="cyzon" checked>
+            <span><strong>Cyzon</strong><small>Cached maps &amp; uncleared courses</small></span>
+          </label>
+          <label class="viewer-option" for="viewer-thumbnail">
+            <input id="viewer-thumbnail" type="checkbox" name="viewer" value="thumbnail">
+            <span><strong>Course thumbnail</strong><small>Full-course image · courses only</small></span>
+          </label>
+        </div>
+      </fieldset>
+      <p class="privacy-note">Your text stays in your browser. A viewer is contacted only when you open its link.</p>
+    </section>
+
+    <section class="panel results-panel" aria-labelledby="results-title">
+      <div class="section-heading results-heading">
+        <div>
+          <h2 id="results-title">Viewer links</h2>
+          <p id="result-summary" role="status" aria-live="polite"></p>
+        </div>
+        <div class="result-actions">
+          <button id="copy-codes" type="button" disabled>Copy codes</button>
+          <button id="copy-urls" class="button-primary" type="button" disabled>Copy URLs</button>
+        </div>
+      </div>
+      <div class="result-options">
+        <label class="display-option" for="options-url-only">
+          <input id="options-url-only" type="checkbox">
+          Show only URLs
+        </label>
+        <p id="action-status" role="status" aria-live="polite"></p>
+      </div>
+      <div id="result">
+        <p class="empty-state">Paste a course or maker code above to create viewer links.</p>
+      </div>
+      <p class="help-text viewer-note">Cyzon shows cached courses when available, and uncleared courses for makers. Open links one at a time to keep requests to each viewer reasonable.</p>
+    </section>
+
+    <footer class="app-footer">
+      <p>For Super Mario Maker 2</p>
+      <nav aria-label="Project links">
+        <a href="https://knflrpn.com/mm2/index.html" target="_blank" rel="noopener noreferrer">Viewer reference</a>
+        <a href="https://github.com/tatt61880/smm2" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </nav>
+    </footer>
+    <noscript><p class="noscript-note">Please enable JavaScript to extract codes and create viewer links.</p></noscript>
+  </main>
 </body>
 
 </html>
