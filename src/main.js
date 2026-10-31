@@ -19,7 +19,7 @@
   restorePreferences();
   input.addEventListener('input', update);
   document.getElementById('input-example').addEventListener('click', () => {
-    input.value = 'Course: 7WC-8BR-XBG\nMaker: XL2-72J-7GF\nThe same course, pasted again: ７ＷＣ－８ＢＲ－ＸＢＧ';
+    input.value = 'Course: RVY-9QQ-G2G\nMaker: VX4-FJ9-JDF\nThe same course, pasted again: RVY-9QQ-G2G';
     update();
     input.focus();
   });
